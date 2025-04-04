@@ -1,0 +1,25 @@
+version: "3"
+services:
+  wallet2-db:
+    build: ./db
+    environment:
+      - POSTGRES_USER=DB_USER
+      - POSTGRES_PASSWORD=DB_PASSWORD
+      - POSTGRES_ADMIN_USER=postgres
+      - POSTGRES_ADMIN_PASSWORD=mysecretpassword
+    networks:
+      - agent2-net     # Use an external network that will be shared with agent2 service
+    ports:
+      - 5433:5432  # Map external port 5434 to internal port 5432  
+    volumes:
+      - wallet2-db-data:/var/lib/postgresql/data
+    expose:
+      - "5432"  # Expose to internal network, not public
+
+volumes:
+  wallet2-db-data:
+
+networks:
+  agent2-net:
+    driver: bridge  # This will link to the network in the other file
+    name: agent2-net
